@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz - Como Estão Suas Amizades?</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .quiz-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: auto;
+        }
+        h2 {
+            color: darkblue;
+        }
+        .question {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .options button {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            background-color: #0066cc;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .options button:hover {
+            background-color: #004c99;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h2>Como Estão Suas Amizades?</h2>
+        <div id="quiz"></div>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        const questions = [
+            { question: "Com que frequência você conversa com seus amigos?", options: ["Todos os dias", "Algumas vezes por semana", "Raramente", "Quase nunca"], scores: [3, 2, 1, 0] },
+            { question: "Você sente que pode contar com seus amigos em momentos difíceis?", options: ["Sempre", "Na maioria das vezes", "Às vezes", "Não"], scores: [3, 2, 1, 0] },
+            { question: "Você costuma marcar encontros ou sair com amigos?", options: ["Frequentemente", "De vez em quando", "Muito raramente", "Nunca"], scores: [3, 2, 1, 0] },
+            { question: "Como você se sente ao conversar com seus amigos?", options: ["Feliz e renovado", "Bem, mas sem grandes emoções", "Indiferente", "Mais cansado ou triste"], scores: [3, 2, 1, 0] },
+            { question: "Seus amigos fazem parte de diferentes fases da sua vida?", options: ["Sim, tenho amigos de longa data e novos também", "Tenho mais antigos ou mais novos", "Poucos amigos, mas importantes", "Não mantenho amizades"], scores: [3, 2, 1, 0] },
+            { question: "Você sente que tem amigos que te incentivam a melhorar?", options: ["Sempre", "Às vezes", "Raramente", "Nunca"], scores: [3, 2, 1, 0] },
+            { question: "Quando conhece alguém novo, você se interessa em construir amizade?", options: ["Sim, adoro conhecer pessoas", "Depende da situação", "Nem sempre", "Evito"], scores: [3, 2, 1, 0] },
+            { question: "Seus amigos sabem sobre sua vida e conquistas?", options: ["Sim, compartilho tudo com eles", "Algumas coisas", "Muito pouco", "Quase nada"], scores: [3, 2, 1, 0] },
+            { question: "O quanto você se preocupa com o bem-estar dos seus amigos?", options: ["Muito, sempre pergunto como estão", "Às vezes", "Só se algo acontecer", "Não me envolvo"], scores: [3, 2, 1, 0] },
+            { question: "Você sente que seus amigos valorizam sua amizade?", options: ["Sim, me sinto querido", "Acho que sim, mas não tenho certeza", "Nem sempre", "Acho que não"], scores: [3, 2, 1, 0] }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function loadQuestion() {
+            if (currentQuestion >= questions.length) {
+                showResult();
+                return;
+            }
+            const quizDiv = document.getElementById("quiz");
+            quizDiv.innerHTML = `<div class='question'>${questions[currentQuestion].question}</div><div class='options'></div>`;
+            const optionsDiv = quizDiv.querySelector(".options");
+            questions[currentQuestion].options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.innerText = option;
+                button.onclick = () => checkAnswer(index);
+                optionsDiv.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selected) {
+            score += questions[currentQuestion].scores[selected];
+            currentQuestion++;
+            loadQuestion();
+        }
+
+        function showResult() {
+            let message;
+            if (score >= 25) {
+                message = "Parabéns! Você tem amizades sólidas e significativas. Continue cultivando seus laços!";
+            } else if (score >= 18) {
+                message = "Muito bem! Você tem bons amigos, mas pode fortalecer ainda mais seus relacionamentos.";
+            } else if (score >= 12) {
+                message = "Suas amizades precisam de mais atenção. Invista tempo e carinho para fortalecer esses laços!";
+            } else {
+                message = "Você pode estar se sentindo sozinho. Busque novas amizades e valorize as conexões existentes.";
+            }
+            document.getElementById("quiz").innerHTML = "";
+            document.getElementById("result").innerHTML = `<p>${message}</p>`;
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
