@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Visão</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        .quiz-container {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            margin: auto;
+        }
+        h2 {
+            color: black;
+        }
+        .question {
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        .options button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            background-color: #08146e;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .options button:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        .result img {
+            margin-top: 20px;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <h2>Teste de Visão</h2>
+        <div id="quiz"></div>
+        <div id="result" class="result"></div>
+    </div>
+    <script>
+        const questions = [
+            { question: "Quando você olha para um letreiro distante, as letras parecem:", options: ["Nítidas e fáceis de ler", "Um pouco borradas, mas consigo entender", "Muito borradas, preciso apertar os olhos", "Quase ilegíveis, só vejo manchas"], scores: [3, 2, 1, 0] },
+            { question: "Ao ler um livro de perto, você sente dificuldade em focar as palavras?", options: ["Nunca, enxergo perfeitamente", "Às vezes, principalmente com pouca luz", "Com frequência, preciso afastar ou aproximar o livro", "Sempre, é impossível sem óculos"], scores: [3, 2, 1, 0] },
+            { question: "Quando você muda rapidamente de um ambiente claro para um escuro, sua visão:", options: ["Se ajusta rapidamente", "Leva alguns segundos para clarear", "Fica turva por um tempo", "Demora muito e às vezes continua ruim"], scores: [3, 2, 1, 0] },
+            { question: "Você percebe halos ou reflexos ao olhar para faróis à noite?", options: ["Não, vejo tudo com clareza", "Às vezes noto um brilho leve", "Vejo halos grandes e luminosos", "Sim, e isso me atrapalha muito ao dirigir"], scores: [3, 2, 1, 0] },
+            { question: "Ao passar muito tempo olhando para telas (celular, computador, TV), você sente:", options: ["Nada, minha visão continua normal", "Leve cansaço nos olhos", "Dor de cabeça e visão embaçada", "Desconforto intenso e necessidade de pausar frequentemente"], scores: [3, 2, 1, 0] },
+            { question: "Você já notou que precisa apertar os olhos para enxergar melhor alguma coisa?", options: ["Não, nunca", "Raramente, só quando estou cansado(a)", "Frequentemente, principalmente para ver de longe", "Sim, o tempo todo"], scores: [3, 2, 1, 0] },
+            { question: "Você já teve dificuldade para diferenciar cores muito parecidas (como verde e vermelho)?", options: ["Nunca, enxergo cores perfeitamente", "Raramente, só em algumas situações", "Frequentemente, mas só em tons muito próximos", "Sim, tenho muita dificuldade em distinguir certas cores"], scores: [3, 2, 1, 0] },
+            { question: "Você já percebeu algum ponto escuro ou mancha flutuante no seu campo de visão?", options: ["Não, nunca", "Raramente, aparece e some rápido", "Sim, de vez em quando", "Com frequência e isso me incomoda"], scores: [3, 2, 1, 0] },
+            { question: "Você já teve dores de cabeça frequentes sem motivo aparente?", options: ["Não, nunca", "Raramente", "Sim, algumas vezes ao mês", "Sim, quase todos os dias"], scores: [3, 2, 1, 0] },
+            { question: "Seus olhos lacrimejam ou ardem sem explicação aparente?", options: ["Não, nunca", "Às vezes, mas não incomoda", "Sim, com frequência", "Sim, a ponto de atrapalhar minhas atividades"], scores: [3, 2, 1, 0] }
+        ];
+        
+        let currentQuestion = 0;
+        let score = 0;
+        
+        function loadQuestion() {
+            if (currentQuestion >= questions.length) {
+                showResult();
+                return;
+            }
+            const quizDiv = document.getElementById("quiz");
+            quizDiv.innerHTML = `<div class='question'>${questions[currentQuestion].question}</div><div class='options'></div>`;
+            const optionsDiv = quizDiv.querySelector(".options");
+            questions[currentQuestion].options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.innerText = option;
+                button.onclick = () => checkAnswer(index);
+                optionsDiv.appendChild(button);
+            });
+        }
+        
+        function checkAnswer(selected) {
+            score += questions[currentQuestion].scores[selected];
+            currentQuestion++;
+            loadQuestion();
+        }
+        
+        function showResult() {
+            let message;
+            if (score >= 25) {
+                message = "Excelente! Sua visão está perfeita!";
+            } else if (score >= 18) {
+                message = "Parabéns! Sua visão é boa!";
+            } else if (score >= 12) {
+                message = "Sua visão está razoável, mas pode melhorar!";
+            } else {
+                message = "Sua visão pode precisar de atenção! Considere uma consulta médica.";
+            }
+            document.getElementById("quiz").innerHTML = "";
+            document.getElementById("result").innerHTML = `<p>${message}</p><img src='https://cdn-icons-png.flaticon.com/512/845/845646.png' alt='Resultado'>`;
+        }
+        
+        loadQuestion();
+    </script>
+</body>
+</html>
