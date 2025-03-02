@@ -36,7 +36,7 @@
             width: 100%;
             padding: 10px;
             font-size: 16px;
-            background-color: #0066cc;
+            background-color: #5e0814;
             color: white;
             border: none;
             border-radius: 8px;
@@ -98,20 +98,32 @@
             loadQuestion();
         }
 
-        function showResult() {
-            let message;
-            if (score >= 25) {
-                message = "Parabéns! Você tem amizades sólidas e significativas. Continue cultivando seus laços!";
-            } else if (score >= 18) {
-                message = "Muito bem! Você tem bons amigos, mas pode fortalecer ainda mais seus relacionamentos.";
-            } else if (score >= 12) {
-                message = "Suas amizades precisam de mais atenção. Invista tempo e carinho para fortalecer esses laços!";
-            } else {
-                message = "Você pode estar se sentindo sozinho. Busque novas amizades e valorize as conexões existentes.";
-            }
-            document.getElementById("quiz").innerHTML = "";
-            document.getElementById("result").innerHTML = `<p>${message}</p>`;
-        }
+       function showResult() {
+    let message;
+    if (score >= 25) {
+        message = "Excelente! Sua visão está perfeita!";
+    } else if (score >= 18) {
+        message = "Parabéns! Sua visão é boa!";
+    } else if (score >= 12) {
+        message = "Sua visão está razoável, mas pode melhorar!";
+    } else {
+        message = "Sua visão pode precisar de atenção! Considere uma consulta médica.";
+    }
+    
+    document.getElementById("quiz").innerHTML = "";
+    document.getElementById("result").innerHTML = `
+        <p>${message}</p>
+        <img src='https://cdn-icons-png.flaticon.com/512/845/845646.png' alt='Resultado'>
+        <br><br>
+        <button onclick="fecharTeste()" style="padding: 10px 20px; font-size: 16px; background: #0d0d6b; color: white; border: none; border-radius: 5px; cursor: pointer;">Continuar lendo o E-book</button>
+    `;
+}
+
+// Função para fechar a janela ou pop-up
+function fecharTeste() {
+    window.close(); // Fecha a aba/janela se estiver em um pop-up
+}
+
 
         loadQuestion();
     </script>
