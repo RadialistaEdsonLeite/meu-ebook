@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste Rápido de Visão</title>
+    <style>
+        body {
+            background-color: #121212;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 98%;
+            margin: auto;
+        }
+        .pergunta {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .opcoes button {
+            width: 100%;
+            padding: 15px;
+            margin: 5px 0;
+            font-size: 18px;
+            background-color: #ff5c11;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        .opcoes button:hover {
+            background-color: #e04e0f;
+        }
+        #resultado {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Teste Rápido de Visão</h1>
+        <div id="quiz"></div>
+        <button id="finalizar" style="display:none; padding: 15px; font-size: 18px; background-color: #ff5c11; color: white; border: none; cursor: pointer;">Ver Resultado</button>
+        <p id="resultado"></p>
+    </div>
+    
+    <script>
+        const perguntas = [
+            "Você sente dificuldade para ler letras pequenas?",
+            "Você enxerga bem de longe sem óculos?",
+            "Você sente os olhos cansados ao final do dia?",
+            "Luzes muito brilhantes te incomodam?",
+            "Você vê halos ao redor das luzes à noite?",
+            "Sente visão embaçada ao mudar o foco de perto para longe?",
+            "Precisa aumentar o brilho da tela para enxergar melhor?",
+            "Enxerga cores de forma vívida e nítida?",
+            "Tem dificuldade para dirigir à noite?",
+            "Você pisca ou esfrega os olhos com frequência para tentar ver melhor?"
+        ];
+        
+        const opcoes = ["Nunca", "Às vezes", "Frequentemente", "Sempre"];
+        const respostas = [];
+        const quizContainer = document.getElementById("quiz");
+        const finalizarBtn = document.getElementById("finalizar");
+        const resultadoTexto = document.getElementById("resultado");
+        
+        perguntas.forEach((pergunta, index) => {
+            const div = document.createElement("div");
+            div.innerHTML = `<p class='pergunta'>${pergunta}</p>`;
+            
+            const botoesDiv = document.createElement("div");
+            botoesDiv.classList.add("opcoes");
+            
+            opcoes.forEach(opcao => {
+                const botao = document.createElement("button");
+                botao.textContent = opcao;
+                botao.onclick = () => {
+                    respostas[index] = opcao;
+                    botao.parentNode.querySelectorAll("button").forEach(btn => btn.style.backgroundColor = "#ff5c11");
+                    botao.style.backgroundColor = "#e04e0f";
+                    verificarRespostas();
+                };
+                botoesDiv.appendChild(botao);
+            });
+            
+            div.appendChild(botoesDiv);
+            quizContainer.appendChild(div);
+        });
+        
+        function verificarRespostas() {
+            if (respostas.length === perguntas.length && !respostas.includes(undefined)) {
+                finalizarBtn.style.display = "block";
+            }
+        }
+        
+        finalizarBtn.onclick = () => {
+            let pontos = 0;
+            respostas.forEach(resp => {
+                if (resp === "Nunca" || resp === "Sim, perfeitamente" || resp === "Nenhuma") pontos += 0;
+                if (resp === "Às vezes" || resp === "Com leve dificuldade" || resp === "Pouca") pontos += 1;
+                if (resp === "Frequentemente" || resp === "Com bastante dificuldade" || resp === "Moderada") pontos += 2;
+                if (resp === "Sempre" || resp === "Não consigo ver nada" || resp === "Muita") pontos += 3;
+            });
+            
+            if (pontos <= 5) resultadoTexto.textContent = "Sua visão está ótima! Continue se cuidando.";
+            else if (pontos <= 15) resultadoTexto.textContent = "Sua visão apresenta algumas dificuldades. Um check-up pode ser interessante.";
+            else resultadoTexto.textContent = "Você pode estar com dificuldades significativas na visão. Recomendamos procurar um oftalmologista.";
+        };
+    </script>
+</body>
+</html>
