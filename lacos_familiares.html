@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Memória - Laços Familiares</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 100px);
+            grid-gap: 10px;
+            justify-content: center;
+            margin: 20px auto;
+        }
+        .card {
+            width: 100px;
+            height: 100px;
+            background-color: #e1fae2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .hidden {
+            background-color: #1b570c;
+            color: transparent;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Jogo da Memória - Laços Familiares</h1>
+    <div class="game-board" id="board"></div>
+    <p id="message"></p>
+
+    <!-- Botão para fechar o jogo (inicialmente oculto) -->
+    <button id="closeButton" onclick="fecharJogo()" style="display: none; padding: 10px 20px; font-size: 16px; background-color: #590503; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px;">
+        Fechar o Jogo
+    </button>
+
+    <script>
+        const images = ['👴', '👵', '👨‍👩‍👧‍👦', '🤝', '❤️', '🏡', '🎉', '📸'];
+        let cards = [...images, ...images];
+        let selected = [];
+        let matched = [];
+
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+
+        function createBoard() {
+            const board = document.getElementById("board");
+            board.innerHTML = '';
+            shuffle(cards);
+            cards.forEach((icon, index) => {
+                const card = document.createElement("div");
+                card.classList.add("card", "hidden");
+                card.dataset.index = index;
+                card.dataset.icon = icon;
+                card.addEventListener("click", flipCard);
+                board.appendChild(card);
+            });
+        }
+
+        function flipCard() {
+            if (selected.length < 2 && !matched.includes(this.dataset.index)) {
+                this.textContent = this.dataset.icon;
+                this.classList.remove("hidden");
+                selected.push(this);
+            }
+            if (selected.length === 2) {
+                setTimeout(checkMatch, 500);
+            }
+        }
+
+        function checkMatch() {
+            if (selected[0].dataset.icon === selected[1].dataset.icon) {
+                matched.push(selected[0].dataset.index, selected[1].dataset.index);
+                if (matched.length === cards.length) {
+                    showFinalMessage();
+                }
+            } else {
+                selected.forEach(card => {
+                    card.textContent = "";
+                    card.classList.add("hidden");
+                });
+            }
+            selected = [];
+        }
+
+        function showFinalMessage() {
+            const messages = [
+                "A família é nosso maior tesouro. Valorize cada momento!",
+                "Na Melhor Idade, a família é um porto seguro. Viva essa bênção!",
+                "O tempo é valioso. Celebre a vida ao lado de quem você ama!",
+                "Nada substitui o calor de um abraço familiar. Fortaleça seus laços!"
+            ];
+            document.getElementById("message").textContent = messages[Math.floor(Math.random() * messages.length)];
+            
+            // Exibir o botão de fechar jogo
+            document.getElementById("closeButton").style.display = "inline-block";
+        }
+
+        function fecharJogo() {
+            window.close();
+        }
+
+        createBoard();
+    </script>
+</body>
+
+
+</html>
