@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz de Segurança Digital</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .quiz-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+        }
+        .question {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .options button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            font-size: 16px;
+            cursor: pointer;
+            border: none;
+            background-color: #590503;
+            color: white;
+            border-radius: 5px;
+        }
+        .options button:hover {
+            background-color: #7a0705;
+        }
+        #result {
+            font-size: 20px;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+        #finalizarJogo {
+            display: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #590503;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+            position: relative;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+#quiz-title {
+    text-align: center;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+    </style>
+</head>
+<body>
+
+<h1 id="quiz-title">Segurança Digital na Melhor Idade</h1>
+
+    <div class="quiz-container">
+        <div id="quiz"></div>
+        <p id="result"></p>
+        <button id="finalizarJogo" onclick="fecharJogo()">Finalizar Jogo</button>
+    </div>
+    
+    <script>
+        const questions = [
+            { question: "O que você faz ao receber um e-mail suspeito pedindo seus dados bancários?", options: ["Respondo imediatamente", "Verifico a autenticidade antes de agir", "Encaminho para amigos", "Clico no link para ver do que se trata"], answer: 1 },
+            { question: "Como você cria suas senhas?", options: ["Uso datas e nomes fáceis de lembrar", "Utilizo geradores de senha e armazeno com segurança", "Repito a mesma senha para todos os sites", "Uso senhas curtas para facilitar a memorização"], answer: 1 },
+            { question: "O que fazer ao receber uma ligação dizendo que seu computador tem um vírus?", options: ["Forneço acesso remoto para ajudar", "Desligo e busco informações oficiais", "Sigo as instruções do atendente", "Pergunto mais detalhes antes de decidir"], answer: 1 },
+            { question: "Ao navegar na internet, como você identifica sites confiáveis?", options: ["Clico sem verificar", "Confiro se há um cadeado na barra de endereço", "Acesso qualquer site que parecer útil", "Verifico se a página tem muitas propagandas"], answer: 1 },
+            { question: "Se um amigo lhe enviar um link estranho pelo WhatsApp, o que você faz?", options: ["Clico para ver do que se trata", "Pergunto se realmente foi ele quem enviou", "Repasso para outras pessoas", "Abro no navegador sem verificar"], answer: 1 },
+            { question: "Ao instalar um aplicativo, o que você verifica?", options: ["Nada, instalo imediatamente", "Analiso as permissões e avaliações", "Baixo apenas se for gratuito", "Peço ajuda para alguém instalar"], answer: 1 },
+            { question: "Qual a melhor prática ao usar redes Wi-Fi públicas?", options: ["Acesso qualquer site sem preocupação", "Uso uma VPN para mais segurança", "Insiro dados pessoais sem medo", "Uso internet pública para acessar bancos"], answer: 1 },
+            { question: "O que você faz ao ver uma promoção incrível no Instagram?", options: ["Clico e insiro meus dados", "Pesquiso antes para confirmar a veracidade", "Compartilho com amigos", "Aproveito rápido antes que acabe"], answer: 1 },
+            { question: "Como você protege seus dados pessoais no celular?", options: ["Não uso senhas", "Ativo autenticação em dois fatores", "Anoto senhas no bloco de notas", "Deixo desbloqueado para facilitar"], answer: 1 },
+            { question: "O que fazer ao receber uma mensagem de banco pedindo informações?", options: ["Respondo com os dados pedidos", "Ligo para o banco e verifico se é real", "Clico no link sem pensar", "Sigo as instruções sem questionar"], answer: 1 }
+        ];
+        
+        let currentQuestion = 0;
+        let score = 0;
+        
+        function loadQuestion() {
+            if (currentQuestion < questions.length) {
+                const quizContainer = document.getElementById("quiz");
+                quizContainer.innerHTML = "";
+                
+                let q = document.createElement("div");
+                q.classList.add("question");
+                q.textContent = questions[currentQuestion].question;
+                quizContainer.appendChild(q);
+                
+                let optionsDiv = document.createElement("div");
+                optionsDiv.classList.add("options");
+                
+                questions[currentQuestion].options.forEach((option, index) => {
+                    let btn = document.createElement("button");
+                    btn.textContent = option;
+                    btn.onclick = () => checkAnswer(index);
+                    optionsDiv.appendChild(btn);
+                });
+                
+                quizContainer.appendChild(optionsDiv);
+            } else {
+                showResult();
+            }
+        }
+        
+        function checkAnswer(selectedIndex) {
+            if (selectedIndex === questions[currentQuestion].answer) {
+                score++;
+            }
+            currentQuestion++;
+            loadQuestion();
+        }
+        
+        function showResult() {
+            let resultText = "";
+            if (score >= 8) {
+                resultText = "Parabéns! Você navega na internet com segurança!";
+            } else if (score >= 5) {
+                resultText = "Você tem bons hábitos, mas ainda pode melhorar!";
+            } else {
+                resultText = "Cuidado! Você está vulnerável a golpes e fraudes.";
+            }
+            document.getElementById("quiz").innerHTML = "<p id='result'>" + resultText + "</p>";
+            document.getElementById("finalizarJogo").style.display = "block";
+        }
+        
+        function fecharJogo() {
+            window.close();
+        }
+        
+        loadQuestion();
+    </script>
+</body>
+</html>
