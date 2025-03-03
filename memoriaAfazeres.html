@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Memória - Atividades para 50+</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 120px);
+            grid-gap: 15px;
+            justify-content: center;
+            margin: 20px auto;
+        }
+        .card {
+            width: 120px;
+            height: 120px;
+            background-color: #faf7f7;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 8px;
+            border: 2px solid #ccc;
+        }
+        .hidden {
+            background-color: #ddd;
+            color: transparent;
+        }
+        #message {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #closeButton {
+            display: none;
+            padding: 12px 24px;
+            font-size: 18px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+</head>
+<body>
+    <h1>Jogo da Memória - Atividades para 50+</h1>
+    <div class="game-board" id="board"></div>
+    <p id="message"></p>
+    <button id="closeButton" onclick="fecharJogo()">Fechar o Jogo</button>
+    <script>
+        const images = [
+            "🎭 Diversão", "📺 Entretenimento", "🎨 Arte", "🎵 Música", 
+            "📚 Leitura", "💻 Interação Online", "👨‍👩‍👧‍👦 Encontros Familiares", "🙏 Prática da Fé"
+        ];
+        let cards = [...images, ...images];
+        let selected = [];
+        let matched = [];
+        function shuffle(array) {
+            return array.sort(() => Math.random() - 0.5);
+        }
+        function createBoard() {
+            const board = document.getElementById("board");
+            board.innerHTML = '';
+            shuffle(cards);
+            cards.forEach((text, index) => {
+                const card = document.createElement("div");
+                card.classList.add("card", "hidden");
+                card.dataset.index = index;
+                card.dataset.text = text;
+                card.addEventListener("click", flipCard);
+                board.appendChild(card);
+            });
+        }
+        function flipCard() {
+            if (selected.length < 2 && !matched.includes(this.dataset.index)) {
+                this.textContent = this.dataset.text;
+                this.classList.remove("hidden");
+                selected.push(this);
+            }
+            if (selected.length === 2) {
+                setTimeout(checkMatch, 500);
+            }
+        }
+        function checkMatch() {
+            if (selected[0].dataset.text === selected[1].dataset.text) {
+                matched.push(selected[0].dataset.index, selected[1].dataset.index);
+                if (matched.length === cards.length) {
+                    showFinalMessage();
+                }
+            } else {
+                selected.forEach(card => {
+                    card.textContent = "";
+                    card.classList.add("hidden");
+                });
+            }
+            selected = [];
+        }
+        function showFinalMessage() {
+            document.getElementById("message").textContent = "Parabéns! Continue explorando suas atividades e afazeres!";
+            document.getElementById("closeButton").style.display = "inline-block";
+        }
+        function fecharJogo() {
+            window.close();
+        }
+        createBoard();
+    </script>
+</body>
+</html>
