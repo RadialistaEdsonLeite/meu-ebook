@@ -4,40 +4,60 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jogo da Memória - Atividades para 50+</title>
+
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            background-color: #f4f4f4;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
+        body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Garante que o conteúdo fique no topo */
+}
+
         .game-board {
             display: grid;
-            grid-template-columns: repeat(4, 120px);
-            grid-gap: 15px;
-            justify-content: center;
-            margin: 20px auto;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 0px; /* Remove espaços verticais e horizontais entre os botões */
+            width: 100%;
+            max-width: 600px; /* Define a largura máxima para telas maiores */
         }
         .card {
-            width: 120px;
-            height: 120px;
+            width: 100%;
+            aspect-ratio: 1/1; /* Mantém os botões quadrados */
             background-color: #faf7f7;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 4.5vw;
             cursor: pointer;
-            border-radius: 8px;
             border: 2px solid #ccc;
+            text-align: center;
+            font-weight: bold;
+            overflow: hidden;
+            padding: 5px;
         }
+
+#instructions {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 10px;
+}
+
         .hidden {
             background-color: #ddd;
             color: transparent;
         }
         #message {
-            margin-top: 20px;
             font-size: 18px;
             font-weight: bold;
+            margin-top: 10px;
         }
         #closeButton {
             display: none;
@@ -46,31 +66,33 @@
             background-color: #007BFF;
             color: white;
             border: none;
-            border-radius: 8px;
             cursor: pointer;
-            margin-top: 20px;
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
+            margin-top: 10px;
         }
     </style>
 </head>
 <body>
-    <h1>Jogo da Memória - Atividades para 50+</h1>
+
+<h1>Jogo da Memória</h1>
+<p id="instructions">Encontre os pares iguais clicando nos cartões. Memorize suas posições e combine-os para ganhar!</p>
+
     <div class="game-board" id="board"></div>
     <p id="message"></p>
     <button id="closeButton" onclick="fecharJogo()">Fechar o Jogo</button>
+    
     <script>
         const images = [
-            "🎭 Diversão", "📺 Entretenimento", "🎨 Arte", "🎵 Música", 
+            "🎭 Diversão", "📺 Lazer", "🎨 Arte", "🎵 Música", 
             "📚 Leitura", "💻 Interação Online", "👨‍👩‍👧‍👦 Encontros Familiares", "🙏 Prática da Fé"
         ];
         let cards = [...images, ...images];
         let selected = [];
         let matched = [];
+
         function shuffle(array) {
             return array.sort(() => Math.random() - 0.5);
         }
+
         function createBoard() {
             const board = document.getElementById("board");
             board.innerHTML = '';
@@ -84,6 +106,7 @@
                 board.appendChild(card);
             });
         }
+
         function flipCard() {
             if (selected.length < 2 && !matched.includes(this.dataset.index)) {
                 this.textContent = this.dataset.text;
@@ -94,6 +117,7 @@
                 setTimeout(checkMatch, 500);
             }
         }
+
         function checkMatch() {
             if (selected[0].dataset.text === selected[1].dataset.text) {
                 matched.push(selected[0].dataset.index, selected[1].dataset.index);
@@ -108,13 +132,16 @@
             }
             selected = [];
         }
+
         function showFinalMessage() {
             document.getElementById("message").textContent = "Parabéns! Continue explorando suas atividades e afazeres!";
             document.getElementById("closeButton").style.display = "inline-block";
         }
+
         function fecharJogo() {
             window.close();
         }
+
         createBoard();
     </script>
 </body>
