@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caça-Palavras Interativo</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(15, 40px);
+            grid-gap: 3px;
+            justify-content: center;
+            margin: 20px auto;
+        }
+        .cell {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #999;
+            font-size: 18px;
+            cursor: pointer;
+            background-color: white;
+        }
+        .found {
+            color: white;
+            font-weight: bold;
+        }
+        #status {
+            margin-top: 15px;
+            font-size: 18px;
+        }
+        .word-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+        .word-list li {
+            font-size: 18px;
+            margin: 5px 0;
+        }
+        .found-word {
+            text-decoration: line-through;
+            color: green;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Caça-Palavras Interativo</h1>
+    <div class="grid" id="grid"></div>
+    <p id="status">Palavras encontradas: 0 / 8</p>
+    <ul class="word-list" id="wordList"></ul>
+    <script>
+        const words = [
+            "DIVERSAO", "ENTRETENIMENTO", "ARTE", "MUSICA", 
+            "LEITURA", "ONLINE", "FAMILIA", "FE"
+        ];
+        const colors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A1", "#FFC300", "#A633FF", "#33FFD7", "#FF5733"];
+        let foundWords = 0;
+        const grid = document.getElementById("grid");
+        const wordList = document.getElementById("wordList");
+        const size = 15;
+        let board = Array.from({ length: size }, () => Array(size).fill(""));
+        
+        function placeWord(word) {
+            let placed = false;
+            while (!placed) {
+                let row = Math.floor(Math.random() * size);
+                let col = Math.floor(Math.random() * (size - word.length));
+                if (board[row].slice(col, col + word.length).every(cell => cell === "")) {
+                    word.split('').forEach((char, i) => board[row][col + i] = char);
+                    placed = true;
+                }
+            }
+        }
+        words.forEach(placeWord);
+        for (let i = 0; i < size; i++) {
+            for (let j = 0; j < size; j++) {
+                if (board[i][j] === "") {
+                    board[i][j] = String.fromCharCode(65 + Math.floor(Math.random() * 26));
+                }
+            }
+        }
+        board.forEach((row, r) => {
+            row.forEach((char, c) => {
+                const cell = document.createElement("div");
+                cell.classList.add("cell");
+                cell.textContent = char;
+                cell.dataset.row = r;
+                cell.dataset.col = c;
+                grid.appendChild(cell);
+            });
+        });
+        words.forEach(word => {
+            const li = document.createElement("li");
+            li.textContent = word;
+            li.id = "word-" + word;
+            wordList.appendChild(li);
+        });
+        let selectedCells = [];
+        grid.addEventListener("click", function (e) {
+            if (e.target.classList.contains("cell")) {
+                e.target.style.backgroundColor = "gray";
+                selectedCells.push(e.target);
+                checkWord();
+            }
+        });
+        function checkWord() {
+            let selectedWord = selectedCells.map(cell => cell.textContent).join("");
+            let index = words.indexOf(selectedWord);
+            if (index !== -1) {
+                selectedCells.forEach(cell => {
+                    cell.style.backgroundColor = colors[index];
+                    cell.classList.add("found");
+                });
+                document.getElementById("word-" + selectedWord).classList.add("found-word");
+                foundWords++;
+                document.getElementById("status").textContent = `Palavras encontradas: ${foundWords} / 8`;
+                selectedCells = [];
+                if (foundWords === words.length) {
+                    setTimeout(() => {
+                        alert("Parabéns! Você encontrou todas as palavras!");
+                        window.close();
+                    }, 500);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
